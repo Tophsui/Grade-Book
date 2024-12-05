@@ -4,7 +4,7 @@
 using namespace std;
 
 // Function prototypes
-double calculateAverage(double scores[], int size);
+double calculateAdjustedAverage(double scores[], int size);
 char determineGrade(double average);
 
 int main() {
@@ -16,9 +16,9 @@ int main() {
     double testScores[NUM_STUDENTS][NUM_TESTS];
 
     // Introduction
-    cout << "Welcome to the Grade Calculator Program.\n";
+    cout << "Welcome to the Enhanced Grade Calculator Program.\n";
     cout << "You will enter each student's name and their test scores.\n";
-    cout << "The program will calculate their average and assign a letter grade.\n\n";
+    cout << "The program will calculate their average (dropping the lowest score) and assign a letter grade.\n\n";
 
     // Input student names and test scores
     for (int i = 0; i < NUM_STUDENTS; i++) {
@@ -43,23 +43,31 @@ int main() {
     cout << string(35, '-') << endl;
 
     for (int i = 0; i < NUM_STUDENTS; i++) {
-        double average = calculateAverage(testScores[i], NUM_TESTS);
-        letterGrades[i] = determineGrade(average);
+        double adjustedAverage = calculateAdjustedAverage(testScores[i], NUM_TESTS);
+        letterGrades[i] = determineGrade(adjustedAverage);
 
         cout << left << setw(15) << studentNames[i] << setw(10) << fixed << setprecision(2)
-            << average << letterGrades[i] << endl;
+            << adjustedAverage << letterGrades[i] << endl;
     }
 
     return 0;
 }
 
-// Function to calculate the average of an array of scores
-double calculateAverage(double scores[], int size) {
+// Function to calculate the adjusted average (dropping the lowest score)
+double calculateAdjustedAverage(double scores[], int size) {
     double total = 0.0;
+    double lowest = scores[0];
+
+    // Find the lowest score and calculate the total
     for (int i = 0; i < size; i++) {
         total += scores[i];
+        if (scores[i] < lowest) {
+            lowest = scores[i];
+        }
     }
-    return total / size;
+
+    // Subtract the lowest score and calculate the average
+    return (total - lowest) / (size - 1);
 }
 
 // Function to determine the letter grade based on the average
